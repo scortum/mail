@@ -28,6 +28,7 @@ RUN apt-get update && \
 # TODO: Delete this once it works :-)
 RUN apt-get install -y vim emacs
 
+EXPOSE [25, 143, 993]
 ADD src/run-exim.sh /run-exim.sh
 CMD "/run-exim.sh"
 
