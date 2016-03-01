@@ -30,8 +30,9 @@ run() {
              -v /etc/localtime:/etc/localtime:ro \
              -v ~/mail/src/tmp:/tmp \
              -v ~/data-mail.scortum.com:/data \
-             -p 6999:6999  \
-             -p 2222:22  \
+             -p 143:143  \
+             -p 993:993  \
+             -p 25:25  \
              mail
 }
 
@@ -44,9 +45,13 @@ bash() {
              -v /etc/localtime:/etc/localtime:ro \
              -v ~/mail/src/tmp:/tmp \
              -v ~/data-mail.scortum.com:/data \
-             -p 6999:6999  \
+             -p 143:143  \
+             -p 993:993  \
+             -p 25:25  \
              mail bash
 }
+
+
 
 
 
@@ -72,3 +77,6 @@ else
   build
 fi
 
+
+
+	
