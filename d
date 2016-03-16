@@ -27,9 +27,10 @@ run() {
   docker stop mail || true
   docker rm mail || true
   docker run -d --name mail \
+             -v /data/mail/tmp:/tmp \
+             -v /data/mail/data:/data \
+             -v /data/scortum-letsencrypt/certs:/certs \
              -v /etc/localtime:/etc/localtime:ro \
-             -v ~/mail/src/tmp:/tmp \
-             -v ~/data-mail.scortum.com:/data \
              -p 143:143  \
              -p 993:993  \
              -p 25:25  \
@@ -42,9 +43,10 @@ enter() {
 
 bash() {
   docker run -it --rm \
+             -v /data/mail/tmp:/tmp \
+             -v /data/mail/data:/data \
+             -v /data/scortum-letsencrypt/certs:/certs \
              -v /etc/localtime:/etc/localtime:ro \
-             -v ~/mail/src/tmp:/tmp \
-             -v ~/data-mail.scortum.com:/data \
              -p 143:143  \
              -p 993:993  \
              -p 25:25  \

@@ -38,4 +38,11 @@ https://letsencrypt.org/
 
 
 
+## fix /etc/imapd.conf
+
+
+  sasl_pwcheck_method: auxprop  #saslauthd  #auxprop
+  sasl_auxprop_plugin: sasldb
+
+
 
