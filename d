@@ -24,12 +24,12 @@ rebuild() {
 }
 
 run() {
-  docker stop mail || true
-  docker rm mail || true
+  docker stop mail 2>/dev/null || true
+  docker rm mail 2>/dev/null || true
   docker run -d --name mail \
-             -v /etc/localtime:/etc/localtime:ro \
-             -v ~/mail/src/tmp:/tmp \
-             -v ~/data-mail.scortum.com:/data \
+             --volume /etc/localtime:/etc/localtime:ro \
+             --volume ~/mail/src/tmp:/tmp \
+             --volume ~/data-mail.scortum.com:/data \
              -p 143:143  \
              -p 993:993  \
              -p 25:25  \
@@ -66,6 +66,11 @@ clean() {
   local DANGLING_IMAGES=$(docker images -f "dangling=true" -q)
   [[ ${DANGLING_IMAGES} ]] && docker rmi ${DANGLING_IMAGES}
 }
+
+gc() {
+ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
+}
+
 
 help() {
   declare -F
