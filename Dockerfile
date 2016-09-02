@@ -6,8 +6,9 @@ ENV TERM xterm
 
 RUN apt-get update \
  && apt-get install -y -q --no-install-recommends \
-    exim4 \
-    cyrus-admin cyrus-clients cyrus-doc cyrus-imapd sasl2-bin \
+    exim4 exim4-daemon-heavy \
+    cyrus-admin cyrus-clients cyrus-doc cyrus-imapd \
+    sasl2-bin \
     supervisor \
     ca-certificates \
     wget \
