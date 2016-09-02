@@ -1,0 +1,3 @@
+exim:   /usr/sbin/exim -bdf
+cyrus:  /bin/bash -c "source /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND"
+sasl:   /usr/sbin/saslauthd -a pam  -c -m /var/run/saslauthd -n 5

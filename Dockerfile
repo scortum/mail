@@ -2,30 +2,33 @@ FROM ubuntu
 MAINTAINER Marcus & Alex
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV TERM xterm
 
-# https://docs.cyrus.foundation/imap/installation/distributions/ubuntu.html
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y exim4 \
-                       cyrus-admin cyrus-clients cyrus-doc cyrus-imapd sasl2-bin \
-                       supervisor
+RUN apt-get update \
+ && apt-get install -y -q --no-install-recommends \
+    exim4 \
+    cyrus-admin cyrus-clients cyrus-doc cyrus-imapd sasl2-bin \
+    supervisor \
+    ca-certificates \
+    wget \
+    emacs vim \
+ && apt-get clean \
+ && rm -r /var/lib/apt/lists/*
 
 RUN mkdir -p /var/log/supervisor
 
-# TODO: Enable cleanup once everything works :-)
-#  && \
-#  apt-get clean && \
-#  rm -rf /var/lib/apt/lists/*
+# Install Forego
+ADD https://github.com/jwilder/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
+RUN chmod u+x /usr/local/bin/forego
 
-
-# TODO: Delete this once it works :-)
-RUN  apt-get install -y vim emacs
 
 # Cyrus Installation:
 RUN  mv  /etc/cyrus.conf  /etc/cyrus.conf.orig &&  \
      mv  /etc/imapd.conf  /etc/imapd.conf.orig 
 COPY src/cyrus/cyrus.conf /etc/cyrus.conf
 COPY src/cyrus/imapd.conf  /etc/imapd.conf
+
+
 ## create some default use, cyrus is configured as admin in imapd.conf
 #RUN echo "cyrus"|saslpasswd2 -u test -c cyrus -p
 #RUN echo "bob"|saslpasswd2 -u test -c bob -p
@@ -34,6 +37,7 @@ COPY src/cyrus/imapd.conf  /etc/imapd.conf
 # CMD /usr/sbin/cyrmaster
 
 COPY src/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY src/Procfile         /Procfile
 
 EXPOSE 25 143 993
 COPY   src/run.sh /run.sh
