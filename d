@@ -28,6 +28,10 @@ run() {
   docker rm mail 2>/dev/null || true
   docker run -d --name mail \
              --volume /etc/localtime:/etc/localtime:ro \
+             --volume ~/mail/src/exim/exim4.conf:/etc/exim4/exim4.conf \
+	     --volume ~/eximdata/virtualdomains:/etc/exim4/virtualdomains \
+	     --volume ~/eximdata/mailinglists.txt:/etc/exim4/mailinglists.txt \
+	     --volume ~/eximdata/users.txt:/etc/exim4/users.txt \
              --volume ~/mail/src/tmp:/tmp \
              --volume ~/data-mail.scortum.com:/data \
              -p 143:143  \

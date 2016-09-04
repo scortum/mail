@@ -14,3 +14,8 @@ Run multiple things in one container:
 Installation documentation:
 
 * [Cyrus installation docu for ubuntu](https://docs.cyrus.foundation/imap/installation/distributions/ubuntu.html)
+
+
+Exim Cheat Sheet:
+* http://bradthemad.org/tech/notes/exim_cheatsheet.php
+
