@@ -29,6 +29,10 @@ RUN  mv  /etc/cyrus.conf  /etc/cyrus.conf.orig &&  \
 COPY src/cyrus/cyrus.conf /etc/cyrus.conf
 COPY src/cyrus/imapd.conf  /etc/imapd.conf
 
+COPY src/exim/exim_sasl2.conf /usr/lib/sasl2/exim.conf
+RUN mkdir /var/run/cyrus
+RUN chown cyrus /var/run/cyrus
+RUN chmod a+x /var/run/saslauthd
 
 ## create some default use, cyrus is configured as admin in imapd.conf
 #RUN echo "cyrus"|saslpasswd2 -u test -c cyrus -p
