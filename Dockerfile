@@ -13,8 +13,19 @@ RUN apt-get update \
     ca-certificates \
     wget \
     emacs vim \
+    strace \
+    rsyslog \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
+
+# setup rsyslogd
+RUN sed 's/$ModLoad imklog/#$ModLoad imklog/' -i /etc/rsyslog.conf  \
+ && sed 's/$KLogPermitNonKernelFacility on/#$KLogPermitNonKernelFacility on/' -i /etc/rsyslog.conf  \
+ && sed 's/$FileOwner syslog/$FileOwner root/' -i /etc/rsyslog.conf  \
+ && sed 's/$PrivDropToUser syslog/#$PrivDropToUser syslog/' -i /etc/rsyslog.conf  \
+ && sed 's/$PrivDropToGroup syslog/#$PrivDropToGroup syslog/' -i /etc/rsyslog.conf  \
+ && mv /etc/rsyslog.d/50-default.conf /etc/rsyslog.d/50-default.conf.orig \
+ && head -n-5 /etc/rsyslog.d/50-default.conf.orig > /etc/rsyslog.d/50-default.conf
 
 RUN mkdir -p /var/log/supervisor
 
