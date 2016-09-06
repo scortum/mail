@@ -35,7 +35,7 @@ RUN chmod u+x /usr/local/bin/forego
 
 # Exim Installation:
 RUN usermod -a -G sasl Debian-exim
-COPY src/exim/exim_sasl2.conf /usr/lib/sasl2/exim.conf
+COPY src/exim/exim4_sasl2.conf /usr/lib/sasl2/exim.conf
 COPY src/exim/exim4.conf /etc/exim4/exim4.conf
 
 # Cyrus Installation:

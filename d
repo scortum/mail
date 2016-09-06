@@ -29,7 +29,9 @@ run() {
   docker run -d --name mail \
              --volume /etc/localtime:/etc/localtime:ro \
 	     --volume /data/mail/config/virtualdomains:/etc/exim4/virtualdomains \
-	     --volume /data/mail/config/mailinglists.txt:/etc/exim4/mailinglists.txt \
+	     --volume /data/mail/config/mailinglists:/etc/exim4/mailinglists \
+	     --volume /data/mail/config/dnslists:/etc/exim4/dnslists \
+	     --volume /data/mail/config/rblwhitelist:/etc/exim4/rblwhitelist \
              --volume /data/mail/tmp:/tmp \
              --volume /data/mail/spool_imap:/data \
              --security-opt seccomp=unconfined  \
