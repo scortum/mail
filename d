@@ -28,10 +28,8 @@ run() {
   docker rm mail 2>/dev/null || true
   docker run -d --name mail \
              --volume /etc/localtime:/etc/localtime:ro \
-             --volume /data/mail/config/exim4.conf:/etc/exim4/exim4.conf \
 	     --volume /data/mail/config/virtualdomains:/etc/exim4/virtualdomains \
 	     --volume /data/mail/config/mailinglists.txt:/etc/exim4/mailinglists.txt \
-	     --volume /data/mail/config/users.txt:/etc/exim4/users.txt \
              --volume /data/mail/tmp:/tmp \
              --volume /data/mail/spool_imap:/data \
              --security-opt seccomp=unconfined  \
@@ -56,6 +54,10 @@ bash() {
              mail bash
 }
 
+adduser()
+{
+  docker exec -it mail saslpasswd2 -u scortum.com -c $1
+}
 
 
 

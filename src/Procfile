@@ -1,3 +1,2 @@
 exim:   /usr/sbin/exim -bdf
 cyrus:  /usr/sbin/cyrmaster -D
-sasl:   /usr/sbin/saslauthd -a pam  -c -m /var/run/saslauthd -n 5

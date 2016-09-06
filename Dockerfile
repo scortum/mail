@@ -33,6 +33,10 @@ RUN mkdir -p /var/log/supervisor
 ADD https://github.com/jwilder/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
 RUN chmod u+x /usr/local/bin/forego
 
+# Exim Installation:
+RUN usermod -a -G sasl Debian-exim
+COPY src/exim/exim_sasl2.conf /usr/lib/sasl2/exim.conf
+COPY src/exim/exim4.conf /etc/exim4/exim4.conf
 
 # Cyrus Installation:
 RUN  mv  /etc/cyrus.conf  /etc/cyrus.conf.orig &&  \
@@ -40,10 +44,10 @@ RUN  mv  /etc/cyrus.conf  /etc/cyrus.conf.orig &&  \
 COPY src/cyrus/cyrus.conf /etc/cyrus.conf
 COPY src/cyrus/imapd.conf  /etc/imapd.conf
 
-COPY src/exim/exim_sasl2.conf /usr/lib/sasl2/exim.conf
-RUN mkdir /var/run/cyrus
-RUN chown cyrus /var/run/cyrus
-RUN chmod a+x /var/run/saslauthd
+RUN mkdir -p /var/run/cyrus/socket
+RUN chown -R cyrus:mail /var/run/cyrus
+
+RUN usermod -a -G sasl cyrus
 
 ## create some default use, cyrus is configured as admin in imapd.conf
 #RUN echo "cyrus"|saslpasswd2 -u test -c cyrus -p
