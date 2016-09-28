@@ -24,13 +24,15 @@ rebuild() {
 }
 
 run() {
-  docker stop mail || true
-  docker rm mail || true
+  docker stop mail 2>/dev/null || true
+  docker rm mail 2>/dev/null || true
   docker run -d --name mail \
-             -v /data/mail/tmp:/tmp \
-             -v /data/mail/data:/data \
-             -v /data/scortum-letsencrypt/certs:/certs \
-             -v /etc/localtime:/etc/localtime:ro \
+             --volume /etc/localtime:/etc/localtime:ro \
+	     --volume /data/mail/config/virtualdomains:/etc/exim4/virtualdomains \
+	     --volume /data/mail/config/mailinglists.txt:/etc/exim4/mailinglists.txt \
+             --volume /data/mail/tmp:/tmp \
+             --volume /data/mail/spool_imap:/data \
+             --security-opt seccomp=unconfined  \
              -p 143:143  \
              -p 993:993  \
              -p 25:25  \
@@ -53,6 +55,10 @@ bash() {
              mail bash
 }
 
+adduser()
+{
+  docker exec -it mail saslpasswd2 -u scortum.com -c $1
+}
 
 
 
@@ -68,6 +74,11 @@ clean() {
   local DANGLING_IMAGES=$(docker images -f "dangling=true" -q)
   [[ ${DANGLING_IMAGES} ]] && docker rmi ${DANGLING_IMAGES}
 }
+
+gc() {
+ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
+}
+
 
 help() {
   declare -F

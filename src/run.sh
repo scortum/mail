@@ -16,3 +16,8 @@
 
 /usr/bin/supervisord
 
+cd / && forego start -r
+
+
+
+

@@ -2,30 +2,53 @@ FROM ubuntu
 MAINTAINER Marcus & Alex
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV TERM xterm
 
-# https://docs.cyrus.foundation/imap/installation/distributions/ubuntu.html
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y exim4 \
-                       cyrus-admin cyrus-clients cyrus-doc cyrus-imapd sasl2-bin \
-                       supervisor
+RUN apt-get update \
+ && apt-get install -y -q --no-install-recommends \
+    exim4 exim4-daemon-heavy \
+    cyrus-admin cyrus-clients cyrus-doc cyrus-imapd \
+    sasl2-bin \
+    supervisor \
+    ca-certificates \
+    wget \
+    emacs vim \
+    strace \
+    rsyslog \
+ && apt-get clean \
+ && rm -r /var/lib/apt/lists/*
+
+# setup rsyslogd
+RUN sed 's/$ModLoad imklog/#$ModLoad imklog/' -i /etc/rsyslog.conf  \
+ && sed 's/$KLogPermitNonKernelFacility on/#$KLogPermitNonKernelFacility on/' -i /etc/rsyslog.conf  \
+ && sed 's/$FileOwner syslog/$FileOwner root/' -i /etc/rsyslog.conf  \
+ && sed 's/$PrivDropToUser syslog/#$PrivDropToUser syslog/' -i /etc/rsyslog.conf  \
+ && sed 's/$PrivDropToGroup syslog/#$PrivDropToGroup syslog/' -i /etc/rsyslog.conf  \
+ && mv /etc/rsyslog.d/50-default.conf /etc/rsyslog.d/50-default.conf.orig \
+ && head -n-5 /etc/rsyslog.d/50-default.conf.orig > /etc/rsyslog.d/50-default.conf
 
 RUN mkdir -p /var/log/supervisor
 
-# TODO: Enable cleanup once everything works :-)
-#  && \
-#  apt-get clean && \
-#  rm -rf /var/lib/apt/lists/*
+# Install Forego
+ADD https://github.com/jwilder/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
+RUN chmod u+x /usr/local/bin/forego
 
-
-# TODO: Delete this once it works :-)
-RUN  apt-get install -y vim emacs
+# Exim Installation:
+RUN usermod -a -G sasl Debian-exim
+COPY src/exim/exim_sasl2.conf /usr/lib/sasl2/exim.conf
+COPY src/exim/exim4.conf /etc/exim4/exim4.conf
 
 # Cyrus Installation:
 RUN  mv  /etc/cyrus.conf  /etc/cyrus.conf.orig &&  \
      mv  /etc/imapd.conf  /etc/imapd.conf.orig 
 COPY src/cyrus/cyrus.conf /etc/cyrus.conf
 COPY src/cyrus/imapd.conf  /etc/imapd.conf
+
+RUN mkdir -p /var/run/cyrus/socket
+RUN chown -R cyrus:mail /var/run/cyrus
+
+RUN usermod -a -G sasl cyrus
+
 ## create some default use, cyrus is configured as admin in imapd.conf
 #RUN echo "cyrus"|saslpasswd2 -u test -c cyrus -p
 #RUN echo "bob"|saslpasswd2 -u test -c bob -p
@@ -34,6 +57,7 @@ COPY src/cyrus/imapd.conf  /etc/imapd.conf
 # CMD /usr/sbin/cyrmaster
 
 COPY src/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY src/Procfile         /Procfile
 
 EXPOSE 25 143 993
 COPY   src/run.sh /run.sh
