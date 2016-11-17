@@ -1,6 +1,10 @@
 # mail
 
 
+[![](https://images.microbadger.com/badges/image/scortum/mail.svg)](https://microbadger.com/images/scortum/mail "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/scortum/mail.svg)](https://microbadger.com/images/scortum/mail "Get your own version badge on microbadger.com")
+
+
 
 * [Dockerfile Best Practices](https://docs.docker.com/engine/articles/dockerfile_best-practices/)
 
