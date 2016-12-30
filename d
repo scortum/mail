@@ -34,6 +34,7 @@ run() {
 	     --volume /data/mail/config/dnslists:/etc/exim4/dnslists \
 	     --volume /data/mail/config/rblwhitelist:/etc/exim4/rblwhitelist \
              --volume /data/mail/tmp:/tmp \
+             --volume /data/mail/etc_ssl:/etc/ssl \
              --volume /data/mail/var_spool:/var/spool \
              --volume /data/mail/var_imap:/var/imap \
              --security-opt seccomp=unconfined  \
