@@ -1,2 +1,4 @@
 exim:   /usr/sbin/exim -bdf
 cyrus:  /usr/sbin/cyrmaster -D
+syslog: /usr/sbin/rsyslogd
+
