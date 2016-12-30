@@ -38,6 +38,7 @@ run() {
              -p 143:143  \
              -p 993:993  \
              -p 25:25  \
+             --hostname mail.scortum.com \
              mail
 }
 
