@@ -28,6 +28,7 @@ run() {
   docker rm mail 2>/dev/null || true
   docker run -d --name mail \
              --volume /etc/localtime:/etc/localtime:ro \
+             --volume /data/mail/config/sasldb2:/etc/sasldb2 \
 	     --volume /data/mail/config/virtualdomains:/etc/exim4/virtualdomains \
 	     --volume /data/mail/config/mailinglists:/etc/exim4/mailinglists \
 	     --volume /data/mail/config/dnslists:/etc/exim4/dnslists \
