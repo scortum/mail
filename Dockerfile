@@ -1,15 +1,20 @@
-FROM ubuntu
-MAINTAINER Marcus & Alex
+FROM apky/ubik AS apky-ubik
+ 
+FROM ubuntu:14.04
+LABEL maintainers="Marcus & Alex"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
+
+RUN apt-get update \
+ && apt-get -y upgrade \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
  && apt-get install -y -q --no-install-recommends \
     exim4 exim4-daemon-heavy \
     cyrus-admin cyrus-clients cyrus-doc cyrus-imapd \
     sasl2-bin \
-    supervisor \
     ca-certificates \
     wget \
     emacs vim \
@@ -27,11 +32,6 @@ RUN sed 's/$ModLoad imklog/#$ModLoad imklog/' -i /etc/rsyslog.conf  \
  && mv /etc/rsyslog.d/50-default.conf /etc/rsyslog.d/50-default.conf.orig \
  && head -n-5 /etc/rsyslog.d/50-default.conf.orig > /etc/rsyslog.d/50-default.conf
 
-RUN mkdir -p /var/log/supervisor
-
-# Install Forego
-ADD https://github.com/jwilder/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
-RUN chmod u+x /usr/local/bin/forego
 
 # Exim Installation:
 RUN usermod -a -G sasl Debian-exim
@@ -56,10 +56,9 @@ RUN usermod -a -G sasl cyrus
 #
 # CMD /usr/sbin/cyrmaster
 
-COPY src/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY src/Procfile         /Procfile
+
+COPY --from=apky-ubik /app/ubik /root/
+COPY   src/run.sh /run.sh
 
 EXPOSE 25 143 993
-COPY   src/run.sh /run.sh
-CMD    "/run.sh"
-
+CMD ["/run.sh"]
