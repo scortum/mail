@@ -1,0 +1,38 @@
+version: "3.1"
+
+services:
+  mail:
+    build: .
+    image: scortum/mail
+
+    container_name: mail
+    restart: always
+
+    ports:
+      - "25:25"
+      - "143:143"
+      - "993:993"
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/data/mail/config/sasldb2:/etc/sasldb2"
+      - "/data/mail/config/mailinglists:/etc/exim4/mailinglists"
+      - "/data/mail/config/virtualdomains:/etc/exim4/virtualdomains"
+      - "/data/mail/config/dnslists:/etc/exim4/dnslists"
+      - "/data/mail/config/rblwhitelist:/etc/exim4/rblwhitelist"
+      - "/data/mail/tmp:/tmp"
+      - "/data/mail/etc_ssl:/etc/ssl"
+      - "/data/mail/var_spool:/var/spool"
+      - "/data/mail/var_imap:/var/imap"
+      - "/data/scortum-letsencrypt/certs:/certs"
+
+    security_opt:
+      - seccomp=unconfined
+    
+    hostname: mail.scortum.com
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"

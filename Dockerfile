@@ -1,8 +1,14 @@
-FROM ubuntu
-MAINTAINER Marcus & Alex
+FROM apky/ubik AS apky-ubik
+ 
+FROM ubuntu:14.04
+LABEL maintainers="Marcus & Alex"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
+
+RUN apt-get update \
+ && apt-get -y upgrade \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
  && apt-get install -y -q --no-install-recommends \

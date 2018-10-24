@@ -14,10 +14,8 @@
 #cyrus@newhost.example.com: userPassword
 
 
-/usr/bin/supervisord
-
-cd / && forego start -r
-
-
-
-
+echo "Starting everything..."
+exec /root/ubik name=syslog           /usr/sbin/rsyslogd -n   \
+           ---  name=exim             /usr/sbin/exim -bdf     \
+           ---  name=cyrus            /usr/sbin/cyrmaster -D  \
+           ---  name=logtail pause=5  /usr/bin/tail -f /var/log/syslog
