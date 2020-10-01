@@ -1,6 +1,6 @@
 FROM apky/ubik AS apky-ubik
  
-FROM ubuntu:14.04
+FROM ubuntu:20.04
 LABEL maintainers="Marcus & Alex"
 
 ENV DEBIAN_FRONTEND noninteractive
