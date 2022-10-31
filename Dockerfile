@@ -1,7 +1,7 @@
 FROM apky/ubik AS apky-ubik
  
-FROM ubuntu:20.04
-LABEL maintainers="Marcus & Alex"
+FROM ubuntu:22.04
+LABEL maintainers="Alex & Marcus"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
