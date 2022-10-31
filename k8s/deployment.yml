@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail
+  template:
+    metadata:
+      labels:
+        app: mail
+    spec:
+      terminationGracePeriodSeconds: 10
+
+      containers:
+      - name: mail
+        image: scortum/mail
+        
+        ports:
+        - containerPort: 25
+        - containerPort: 143
+        - containerPort: 993
+
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+
+        - name: sasldb2
+          mountPath: /etc/sasldb2
+
+        - name: mailinglists
+          mountPath: /etc/exim4/mailinglists
+
+        - name: virtualdomains
+          mountPath: /etc/exim4/virtualdomains
+
+        - name: dnslists
+          mountPath: /etc/exim4/dnslists
+
+        - name: rblwhitelist
+          mountPath: /etc/exim4/rblwhitelist
+
+        - name: tmp
+          mountPath: /tmp
+
+        - name: ssl
+          mountPath: /etc/ssl
+
+        - name: spool
+          mountPath: /var/spool
+
+        - name: imap
+          mountPath: /var/imap
+
+        - name: certs
+          mountPath: /certs
+
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+
+      - name: sasldb2
+        hostPath:
+          path: /data/mail/config/sasldb2
+
+      - name: mailinglists
+        hostPath:
+          path: /data/mail/config/mailinglists
+
+      - name: virtualdomains
+        hostPath:
+          path: /data/mail/config/virtualdomains
+
+      - name: dnslists
+        hostPath:
+          path: /data/mail/config/dnslists
+
+      - name: rblwhitelist
+        hostPath:
+          path: /data/mail/config/rblwhitelist
+
+      - name: tmp
+        hostPath:
+          path: /data/mail/tmp
+
+      - name: ssl
+        hostPath:
+          path: /data/mail/etc_ssl
+
+      - name: spool
+        hostPath:
+          path: /data/mail/var_spool
+
+      - name: imap
+        hostPath:
+          path: /data/mail/var_imap
+
+      - name: certs
+        hostPath:
+          path: /data/scortum-letsencrypt/certs
+
+
