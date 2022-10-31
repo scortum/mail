@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: ingress-nginx
+data:
+  25:  "default/mail:25"
+  143: "default/mail:143"
+  993: "default/mail:993"
